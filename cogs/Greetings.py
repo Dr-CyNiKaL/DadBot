@@ -27,16 +27,15 @@ class Greetings(commands.Cog):
         embed.set_thumbnail(url="https://alekeagle.com/assets/dad.518f1968.png")
         embed.add_field(name="d!info", value="Displays this message :)", inline=False)
         embed.add_field(name="d!hello", value="See what Dad's up to!", inline=False)
-        embed.add_field(name="d!pfp", value="Displays your profile picture", inline=False)
+        #embed.add_field(name="d!pfp", value="Displays your profile picture", inline=False)
         embed.add_field(name="d!ping", value="Pong!", inline=False)
         embed.add_field(name="d!djoke", value="Get a dad joke!", inline=False)
-        embed.add_field(name="d!joke", value="Get oldie but a goodie!", inline=False)
-        print("Info command used by %s" % ctx.author.display_name)
+        embed.add_field(name="d!joke", value="An oldie but a goodie!", inline=False)
         await ctx.send(embed=embed)
 
     # User Join
     @commands.Cog.listener()
-    async def on_member_join(member):
+    async def on_member_join(self, member):
         dadJokeURL = DAD_JOKE_URL
         headers = {
             "X-RapidAPI-Key": DAD_JOKE_API_KEY,
@@ -44,13 +43,17 @@ class Greetings(commands.Cog):
         }
         response = requests.get(dadJokeURL, headers=headers)
         channel = member.guild.system_channel
-        await channel.send(f"{member.name} has joined to play catch with Dad!\n**Here's a** ***catch***: *%s*" % json.loads(response.text)["joke"])
+        message = await channel.send(f"%s {member.mention} has joined to play catch with Dad! %s\n**Here's a** ***catch***: *%s*" % (partying, baseball, json.loads(response.text)["joke"]))
+        for emoji in [party_popper,party_popper,sparkles,confetti_ball,cricket]:
+            await message.add_reaction(emoji)
 
     # User Leave
     @commands.Cog.listener()
-    async def on_member_remove(member):
+    async def on_member_remove(self, member):
         channel = member.guild.system_channel
-        await channel.send(f'%s{member.name} has left to get milk. %s%s%s' % (pensive, milk, man_running, dashing))
+        message = await channel.send(f'%s {member.mention} has left to get milk. %s' % (pensive, store))
+        for emoji in [milk,man_running,dashing]:
+            await message.add_reaction(emoji)
 
 def setup(client):
     client.add_cog(Greetings(client))

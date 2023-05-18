@@ -36,14 +36,13 @@ class Commands(commands.Cog):
     @commands.command()
     async def joke(self, ctx):
         JokeURL = JOKE_URL
-        querystring = {"format":"json","contains":"C%23","idRange":"0-150","blacklistFlags":"nsfw,racist"}
         headers = {
             "X-RapidAPI-Key": JOKE_API_KEY,
-            "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com"
+            "X-RapidAPI-Host": "joke110.p.rapidapi.com"
         }
-        response = requests.get(JokeURL, headers=headers, params=querystring)
+        response = requests.get(JokeURL, headers=headers)
         await ctx.send("Here's a joke:")
-        await ctx.send("%s %s" % (json.loads(response.text)["setup"], json.loads(response.text)["delivery"]))
+        await ctx.send("%s ||%s||" % (json.loads(response.text)["setup"], json.loads(response.text)["punchline"]))
 
 def setup(client):
     client.add_cog(Commands(client))
